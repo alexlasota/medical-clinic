@@ -35,7 +35,6 @@ public class Patient {
         this.birthday = birthday;
     }
 
-
     public String getEmail() {
         return email;
     }
