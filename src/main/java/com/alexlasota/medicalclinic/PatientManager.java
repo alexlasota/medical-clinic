@@ -30,12 +30,10 @@ public class PatientManager {
         patients.removeIf(patient -> patient.getEmail().equals(email));
     }
 
-    public boolean updatePatientByEmail(String email, String password, Long idCardNo,
-                                        String firstName, String lastName,
-                                        int phoneNumber, String birthday) {
+    public boolean updatePatientByEmail(String email, Patient editedPatient) {
         Patient patient = getPatientByEmail(email);
         if (patient != null) {
-            patient.updateDetails(email, password, idCardNo, firstName, lastName, phoneNumber, birthday);
+            patient.updateDetails(editedPatient);
             return true;
         }
         return false;

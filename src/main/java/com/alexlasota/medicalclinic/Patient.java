@@ -1,19 +1,17 @@
 package com.alexlasota.medicalclinic;
 
-import org.springframework.stereotype.Component;
 
-@Component
 public class Patient {
 
     private String email;
     private String password;
-    private Long idCardNo;
+    private String idCardNo;
     private String firstName;
     private String lastName;
     private int phoneNumber;
     private String birthday;
 
-    public Patient(String email, String password, Long idCardNo, String firstName, String lastName, int phoneNumber, String birthday) {
+    public Patient(String email, String password, String idCardNo, String firstName, String lastName, int phoneNumber, String birthday) {
         this.email = email;
         this.password = password;
         this.idCardNo = idCardNo;
@@ -23,16 +21,14 @@ public class Patient {
         this.birthday = birthday;
     }
 
-    public void updateDetails(String email, String password, Long idCardNo,
-                              String firstName, String lastName,
-                              int phoneNumber, String birthday) {
-        this.email = email;
-        this.password = password;
-        this.idCardNo = idCardNo;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.birthday = birthday;
+    public void updateDetails(Patient updatedPatient) {
+        this.email = updatedPatient.getEmail();
+        this.password = updatedPatient.getPassword();
+        this.idCardNo = updatedPatient.getIdCardNo();
+        this.firstName = updatedPatient.getFirstName();
+        this.lastName = updatedPatient.getLastName();
+        this.phoneNumber = updatedPatient.getPhoneNumber();
+        this.birthday = updatedPatient.getBirthday();
     }
 
     public String getEmail() {
@@ -51,11 +47,11 @@ public class Patient {
         this.password = password;
     }
 
-    public Long getIdCardNo() {
+    public String getIdCardNo() {
         return idCardNo;
     }
 
-    public void setIdCardNo(Long idCardNo) {
+    public void setIdCardNo(String idCardNo) {
         this.idCardNo = idCardNo;
     }
 
