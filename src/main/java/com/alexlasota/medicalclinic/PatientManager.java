@@ -14,12 +14,10 @@ public class PatientManager {
     }
 
     public Patient getPatientByEmail(String email) {
-        for (Patient patient : patients) {
-            if (patient.getEmail().equals(email)) {
-                return patient;
-            }
-        }
-        return null;
+        return patients.stream()
+                .filter(patient -> patient.getEmail().equals(email))
+                .findFirst()
+                .orElse(null);
     }
 
     public void addPatient(Patient patient) {
