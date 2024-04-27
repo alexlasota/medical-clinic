@@ -1,5 +1,8 @@
 package com.alexlasota.medicalclinic;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Patient {
 
     private String email;
@@ -19,6 +22,19 @@ public class Patient {
         this.phoneNumber = phoneNumber;
         this.birthday = birthday;
     }
+
+    public void updateDetails(String email, String password, Long idCardNo,
+                              String firstName, String lastName,
+                              int phoneNumber, String birthday) {
+        this.email = email;
+        this.password = password;
+        this.idCardNo = idCardNo;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.birthday = birthday;
+    }
+
 
     public String getEmail() {
         return email;

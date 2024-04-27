@@ -1,7 +1,10 @@
 package com.alexlasota.medicalclinic;
 
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+@Service
 public class PatientManager {
 
     private List<Patient> patients;
@@ -22,16 +25,21 @@ public class PatientManager {
     public void addPatient(Patient patient) {
         patients.add(patient);
     }
-    public void removePatientByEmail(String email){
-        for (Patient patient : patients) {
-            if (patient.getEmail().equals(email)){
-                patients.remove(patient);
-            }
-        }
+
+    public void removePatientByEmail(String email) {
+        patients.removeIf(patient -> patient.getEmail().equals(email));
     }
 
-    public void updatePatientByEmail(String email){
-
+    public boolean updatePatientByEmail(String email, String password, Long idCardNo,
+                                        String firstName, String lastName,
+                                        int phoneNumber, String birthday) {
+        Patient patient = getPatientByEmail(email);
+        if (patient != null) {
+            patient.updateDetails(email, password, idCardNo, firstName, lastName, phoneNumber, birthday);
+            return true;
+        }
+        return false;
     }
 }
+
 
