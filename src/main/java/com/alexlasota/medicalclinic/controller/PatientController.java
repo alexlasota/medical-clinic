@@ -43,6 +43,7 @@ public class PatientController {
         patientService.removePatientByEmail(email);
     }
 
+    @PutMapping
     public Patient editPatient(@PathVariable("email") String email, @RequestBody Patient newPatientData) {
         return patientService.editPatient(email, newPatientData);
     }
