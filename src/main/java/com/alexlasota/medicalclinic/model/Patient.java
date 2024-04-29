@@ -1,4 +1,4 @@
-package com.alexlasota.medicalclinic;
+package com.alexlasota.medicalclinic.model;
 
 
 public class Patient {
@@ -19,16 +19,6 @@ public class Patient {
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.birthday = birthday;
-    }
-
-    public void updateDetails(Patient updatedPatient) {
-        this.email = updatedPatient.getEmail();
-        this.password = updatedPatient.getPassword();
-        this.idCardNo = updatedPatient.getIdCardNo();
-        this.firstName = updatedPatient.getFirstName();
-        this.lastName = updatedPatient.getLastName();
-        this.phoneNumber = updatedPatient.getPhoneNumber();
-        this.birthday = updatedPatient.getBirthday();
     }
 
     public String getEmail() {
