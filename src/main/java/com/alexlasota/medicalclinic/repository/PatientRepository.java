@@ -41,5 +41,9 @@ public class PatientRepository {
         patient.setIdCardNo(newPatientData.getIdCardNo());
         patient.setPhoneNumber(newPatientData.getPhoneNumber());
     }
+
+    public void updatePatientPassword(Patient patient, String newPassword) {
+        patient.setPassword(newPassword);
+    }
 }
 

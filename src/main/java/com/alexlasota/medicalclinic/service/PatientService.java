@@ -1,11 +1,13 @@
 package com.alexlasota.medicalclinic.service;
 
+import com.alexlasota.medicalclinic.model.Password;
 import com.alexlasota.medicalclinic.model.Patient;
 import com.alexlasota.medicalclinic.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +39,27 @@ public class PatientService {
         patientRepository.editPatient(toEditPatient, newPatientData);
         return toEditPatient;
     }
-}
+    public Optional<Patient> updatePassword(String email, Patient newPassword) {
+        Optional<Patient> optionalPatient = Optional.ofNullable(getPatientByEmail(email));
+        if (optionalPatient.isPresent()) {
+            Patient patient = optionalPatient.get();
+            if (isValidPassword(newPassword.getPassword())) {
+                patientRepository.updatePatientPassword(patient, newPassword.getPassword());
+                return Optional.of(patient);
+            } else {
+                return Optional.empty();
+            }
+        } else {
+            return Optional.empty();
+        }
+    }
+
+
+    private boolean isValidPassword(String password) {
+        return password.length() >= 5 && password.matches(".*\\d.*");
+    }
+        // \\d - dowolna cyfra 0-9. * ciąg znaków
+    }
+
 
 

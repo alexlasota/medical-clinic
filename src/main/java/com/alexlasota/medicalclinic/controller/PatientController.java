@@ -7,13 +7,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/patients")
 @RequiredArgsConstructor
 public class PatientController {
 
-    private PatientService patientService;
+    private final PatientService patientService;
 
     @GetMapping //@GetMapping obsługuje żądania typu GET,
     public List<Patient> getPatients() {
@@ -43,8 +44,14 @@ public class PatientController {
         patientService.removePatientByEmail(email);
     }
 
-    @PutMapping
-    public Patient editPatient(@PathVariable("email") String email, @RequestBody Patient newPatientData) {
+    @PutMapping("/{email}")
+    public Patient editPatient(@PathVariable String email, @RequestBody Patient newPatientData) {
         return patientService.editPatient(email, newPatientData);
     }
+    @PatchMapping("/{email}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public Optional<Patient> updatePassword(@PathVariable String email, @RequestBody Patient newPassword){
+        return patientService.updatePassword(email,newPassword);
+    }
+
 }
