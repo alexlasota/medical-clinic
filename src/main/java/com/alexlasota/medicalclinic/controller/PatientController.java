@@ -51,8 +51,8 @@ public class PatientController {
     }
 
     @PatchMapping("/{email}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public Optional<Patient> updatePassword(@PathVariable String email, @RequestBody Patient newPassword) {
+    @ResponseStatus(HttpStatus.OK)
+    public Patient updatePassword(@PathVariable String email, @RequestBody Patient newPassword) {
         return patientService.updatePassword(email, newPassword);
     }
 
