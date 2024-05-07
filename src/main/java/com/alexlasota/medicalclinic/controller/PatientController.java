@@ -39,7 +39,8 @@ public class PatientController {
     }
 
     @DeleteMapping("/{email}")
-    @ResponseStatus(HttpStatus.NO_CONTENT) //NO_CONTENT zeby uzytkownik nie byl zdezorientowany czemu nie ma zadnej wiadomosci w body
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    //NO_CONTENT zeby uzytkownik nie byl zdezorientowany czemu nie ma zadnej wiadomosci w body
     public void removePatientByEmail(@PathVariable String email) {
         patientService.removePatientByEmail(email);
     }
@@ -48,10 +49,11 @@ public class PatientController {
     public Patient editPatient(@PathVariable String email, @RequestBody Patient newPatientData) {
         return patientService.editPatient(email, newPatientData);
     }
+
     @PatchMapping("/{email}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Optional<Patient> updatePassword(@PathVariable String email, @RequestBody Patient newPassword){
-        return patientService.updatePassword(email,newPassword);
+    public Optional<Patient> updatePassword(@PathVariable String email, @RequestBody Patient newPassword) {
+        return patientService.updatePassword(email, newPassword);
     }
 
 }
