@@ -21,7 +21,7 @@ public class PatientService {
 
     public Patient getPatientByEmail(String email) {
         return patientRepository.getPatientByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Patient with given email doesnt exist"));
+                .orElseThrow(() -> new RuntimeException("Patient with given email doesnt exist"));
     }
 
     public void addPatient(Patient patient) {
@@ -34,7 +34,7 @@ public class PatientService {
 
     public Patient editPatient(String email, Patient newPatientData) {
         Patient toEditPatient = patientRepository.getPatientByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Patient with given email doesnt exist"));
+                .orElseThrow(() -> new RuntimeException("Patient with given email doesnt exist"));
 
         patientRepository.editPatient(toEditPatient, newPatientData);
         return toEditPatient;
@@ -42,12 +42,12 @@ public class PatientService {
 
     public Patient updatePassword(String email, Patient newPassword) {
         Patient patient = patientRepository.getPatientByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Patient with given email doesn't exist"));
+                .orElseThrow(() -> new RuntimeException("Patient with given email doesn't exist"));
 
         if (isValidPassword(newPassword.getPassword())) {
             patientRepository.updatePatientPassword(patient, newPassword.getPassword());
         } else {
-            throw new IllegalArgumentException("Invalid password format");
+            throw new RuntimeException("Invalid password format");
         }
         return patient;
     }
