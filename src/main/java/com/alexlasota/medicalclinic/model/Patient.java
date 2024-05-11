@@ -8,10 +8,10 @@ public class Patient {
     private String idCardNo;
     private String firstName;
     private String lastName;
-    private int phoneNumber;
+    private String phoneNumber;
     private String birthday;
 
-    public Patient(String email, String password, String idCardNo, String firstName, String lastName, int phoneNumber, String birthday) {
+    public Patient(String email, String password, String idCardNo, String firstName, String lastName, String phoneNumber, String birthday) {
         this.email = email;
         this.password = password;
         this.idCardNo = idCardNo;
@@ -61,11 +61,11 @@ public class Patient {
         this.lastName = lastName;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
