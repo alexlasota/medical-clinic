@@ -1,6 +1,8 @@
 package com.alexlasota.medicalclinic.model;
 
 
+import java.util.Objects;
+
 public class Patient {
 
     private String email;
@@ -88,5 +90,18 @@ public class Patient {
                 ", phoneNumber=" + phoneNumber +
                 ", birthday='" + birthday + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Patient patient = (Patient) o;
+        return Objects.equals(email, patient.email) && Objects.equals(password, patient.password) && Objects.equals(idCardNo, patient.idCardNo) && Objects.equals(firstName, patient.firstName) && Objects.equals(lastName, patient.lastName) && Objects.equals(phoneNumber, patient.phoneNumber) && Objects.equals(birthday, patient.birthday);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, password, idCardNo, firstName, lastName, phoneNumber, birthday);
     }
 }

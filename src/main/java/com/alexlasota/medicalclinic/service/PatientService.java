@@ -1,7 +1,6 @@
 package com.alexlasota.medicalclinic.service;
 
 import com.alexlasota.medicalclinic.exceptions.MedicalClinicException;
-import com.alexlasota.medicalclinic.model.Password;
 import com.alexlasota.medicalclinic.model.Patient;
 import com.alexlasota.medicalclinic.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +40,9 @@ public class PatientService {
         Patient toEditPatient = patientRepository.getPatientByEmail(email)
                 .orElseThrow(() -> new MedicalClinicException(HttpStatus.NOT_FOUND, "Patient with given email doesnt exist"));
 
+
         checkIfDataIsNotNull(newPatientData);
+        checkIfEmailDoubles(newPatientData, newPatientData.getEmail());
 
         if (!toEditPatient.getIdCardNo().equals(newPatientData.getIdCardNo())) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Changing idNumber isnt allowed byczku");
@@ -90,7 +90,10 @@ public class PatientService {
         if (patient.getBirthday() == null) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Birthday is required");
         }
-        if (patientRepository.getPatientByEmail(patient.getEmail()).isPresent()) {
+    }
+
+    private void checkIfEmailDoubles(Patient patient, String email) {
+        if (!patient.getEmail().equals(email) && patientRepository.getPatientByEmail(patient.getEmail()).isPresent()) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Patient with given email already exists");
         }
     }
