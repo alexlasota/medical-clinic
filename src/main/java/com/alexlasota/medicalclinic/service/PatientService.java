@@ -40,7 +40,6 @@ public class PatientService {
         Patient toEditPatient = patientRepository.getPatientByEmail(email)
                 .orElseThrow(() -> new MedicalClinicException(HttpStatus.NOT_FOUND, "Patient with given email doesnt exist"));
 
-
         checkIfDataIsNotNull(newPatientData);
         checkIsEmailAvailable(newPatientData, newPatientData.getEmail());
 
