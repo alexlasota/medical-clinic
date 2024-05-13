@@ -42,7 +42,7 @@ public class PatientService {
 
 
         checkIfDataIsNotNull(newPatientData);
-        checkIfEmailDoubles(newPatientData, newPatientData.getEmail());
+        checkIsEmailAvailable(newPatientData, newPatientData.getEmail());
 
         if (!toEditPatient.getIdCardNo().equals(newPatientData.getIdCardNo())) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Changing idNumber isnt allowed byczku");
@@ -55,9 +55,7 @@ public class PatientService {
         Patient patient = patientRepository.getPatientByEmail(email)
                 .orElseThrow(() -> new MedicalClinicException(HttpStatus.NOT_FOUND, "Patient with given email doesn't exist"));
 
-        if (isValidPassword(newPassword.getPassword())) {
-            patientRepository.updatePatientPassword(patient, newPassword.getPassword());
-        } else {
+        if (!isValidPassword(newPassword.getPassword())) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Invalid password format");
         }
         return patient;
@@ -92,7 +90,7 @@ public class PatientService {
         }
     }
 
-    private void checkIfEmailDoubles(Patient patient, String email) {
+    private void checkIsEmailAvailable(Patient patient, String email) {
         if (!patient.getEmail().equals(email) && patientRepository.getPatientByEmail(patient.getEmail()).isPresent()) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Patient with given email already exists");
         }

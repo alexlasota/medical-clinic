@@ -23,7 +23,7 @@ public class PatientController {
         return patientService.getPatients()
                 .stream()
                 .map(this::convertToDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     //w sytuacji kiedy w sciezce nasz parametr nazywa sie tak samo jak zmienna
@@ -37,11 +37,11 @@ public class PatientController {
     // metoda getPatientByEmail zostanie wywołana,
     // a pacjent o podanym adresie e-mail zostanie zwrócony jako odpowiedź na żądanie.
 
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addPatient(@RequestBody Patient patient) {
+    public Patient addPatient(@RequestBody Patient patient) {
         patientService.addPatient(patient);
+        return patient;
     }
 
     @DeleteMapping("/{email}")
@@ -57,7 +57,6 @@ public class PatientController {
     }
 
     @PatchMapping("/{email}")
-    @ResponseStatus(HttpStatus.OK)
     public Patient updatePassword(@PathVariable String email, @RequestBody Patient newPassword) {
         return patientService.updatePassword(email, newPassword);
     }
@@ -72,5 +71,4 @@ public class PatientController {
                 patient.getBirthday()
         );
     }
-
 }
