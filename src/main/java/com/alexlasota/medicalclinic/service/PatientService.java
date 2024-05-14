@@ -57,6 +57,7 @@ public class PatientService {
         if (!isValidPassword(newPassword.getPassword())) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Invalid password format");
         }
+        patientRepository.updatePatientPassword(newPassword, email);
         return patient;
     }
 

@@ -25,5 +25,4 @@ public class MedicalClinicErrorHandler {
         return ResponseEntity.status(medicalClinicException.getHttpStatus())
                 .body(new ErrorMessageDto(medicalClinicException.getMessage(), medicalClinicException.getHttpStatus()));
     }
-
 }

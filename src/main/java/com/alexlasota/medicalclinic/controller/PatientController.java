@@ -1,5 +1,6 @@
 package com.alexlasota.medicalclinic.controller;
 
+import com.alexlasota.medicalclinic.mapper.PatientMapper;
 import com.alexlasota.medicalclinic.model.PatientDto;
 import com.alexlasota.medicalclinic.service.PatientService;
 import com.alexlasota.medicalclinic.model.Patient;
@@ -8,8 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/patients")
@@ -17,20 +16,18 @@ import java.util.stream.Collectors;
 public class PatientController {
 
     private final PatientService patientService;
+    private final PatientMapper patientMapper;
 
     @GetMapping
     public List<PatientDto> getPatients() {
-        return patientService.getPatients()
-                .stream()
-                .map(this::convertToDto)
-                .toList();
+        return patientMapper.mapListToDto(patientService.getPatients());
     }
 
     //w sytuacji kiedy w sciezce nasz parametr nazywa sie tak samo jak zmienna
     // to wtedy nie musimy explicit podawac jej nazwy @PathVariable("email")
     @GetMapping("/{email}")
     public PatientDto getPatientByEmail(@PathVariable String email) {
-        return convertToDto(patientService.getPatientByEmail(email));
+        return patientMapper.patientToPatientDto(patientService.getPatientByEmail(email));
     }
     //W rezultacie, gdy żądanie GET zostanie wysłane do endpointu /
     // z adresem e-mail jako częścią ścieżki (np. /patients/john@example.com),
@@ -53,22 +50,11 @@ public class PatientController {
     @PutMapping("/{email}")
     public PatientDto editPatient(@PathVariable String email, @RequestBody Patient newPatientData) {
         Patient updatedPatient = patientService.editPatient(email, newPatientData);
-        return convertToDto(patientService.editPatient(email, newPatientData));
+        return patientMapper.patientToPatientDto(patientService.editPatient(email, newPatientData));
     }
 
     @PatchMapping("/{email}")
     public Patient updatePassword(@PathVariable String email, @RequestBody Patient newPassword) {
         return patientService.updatePassword(email, newPassword);
-    }
-
-    private PatientDto convertToDto(Patient patient) {
-        return new PatientDto(
-                patient.getEmail(),
-                patient.getIdCardNo(),
-                patient.getFirstName(),
-                patient.getLastName(),
-                patient.getPhoneNumber(),
-                patient.getBirthday()
-        );
     }
 }
