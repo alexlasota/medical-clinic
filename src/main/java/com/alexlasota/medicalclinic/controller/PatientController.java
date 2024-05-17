@@ -1,6 +1,7 @@
 package com.alexlasota.medicalclinic.controller;
 
 import com.alexlasota.medicalclinic.mapper.PatientMapper;
+import com.alexlasota.medicalclinic.model.Password;
 import com.alexlasota.medicalclinic.model.PatientDto;
 import com.alexlasota.medicalclinic.service.PatientService;
 import com.alexlasota.medicalclinic.model.Patient;
@@ -54,7 +55,7 @@ public class PatientController {
     }
 
     @PatchMapping("/{email}")
-    public Patient updatePassword(@PathVariable String email, @RequestBody Patient newPassword) {
+    public Patient updatePassword(@PathVariable String email, @RequestBody Password newPassword) {
         return patientService.updatePassword(email, newPassword);
     }
 }

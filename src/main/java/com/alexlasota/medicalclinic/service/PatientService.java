@@ -1,6 +1,7 @@
 package com.alexlasota.medicalclinic.service;
 
 import com.alexlasota.medicalclinic.exceptions.MedicalClinicException;
+import com.alexlasota.medicalclinic.model.Password;
 import com.alexlasota.medicalclinic.model.Patient;
 import com.alexlasota.medicalclinic.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,28 +17,28 @@ public class PatientService {
     private final PatientRepository patientRepository;
 
     public List<Patient> getPatients() {
-        return patientRepository.getPatients();
+        return patientRepository.findAll();
     }
 
     public Patient getPatientByEmail(String email) {
-        return patientRepository.getPatientByEmail(email)
+        return patientRepository.findById(email)
                 .orElseThrow(() -> new MedicalClinicException(HttpStatus.NOT_FOUND, "Patient with given email doesnt exist"));
     }
 
     public void addPatient(Patient patient) {
-        if (patientRepository.getPatientByEmail(patient.getEmail()).isPresent()) {
+        if (patientRepository.findById(patient.getEmail()).isPresent()) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Patient with email already exists");
         }
         checkIfDataIsNotNull(patient);
-        patientRepository.addPatient(patient);
+        patientRepository.save(patient);
     }
 
     public void removePatientByEmail(String email) {
-        patientRepository.removePatientByEmail(email);
+        patientRepository.deleteById(email);
     }
 
     public Patient editPatient(String email, Patient newPatientData) {
-        Patient toEditPatient = patientRepository.getPatientByEmail(email)
+        Patient toEditPatient = patientRepository.findById(email)
                 .orElseThrow(() -> new MedicalClinicException(HttpStatus.NOT_FOUND, "Patient with given email doesnt exist"));
 
         checkIfDataIsNotNull(newPatientData);
@@ -46,19 +47,19 @@ public class PatientService {
         if (!toEditPatient.getIdCardNo().equals(newPatientData.getIdCardNo())) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Changing idNumber isnt allowed byczku");
         }
-        patientRepository.editPatient(toEditPatient, newPatientData);
-        return toEditPatient;
+        updatePatientData(toEditPatient, newPatientData);
+        return patientRepository.save(toEditPatient);
     }
 
-    public Patient updatePassword(String email, Patient newPassword) {
-        Patient patient = patientRepository.getPatientByEmail(email)
+    public Patient updatePassword(String email, Password newPassword) {
+        Patient patient = patientRepository.findById(email)
                 .orElseThrow(() -> new MedicalClinicException(HttpStatus.NOT_FOUND, "Patient with given email doesn't exist"));
 
         if (!isValidPassword(newPassword.getPassword())) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Invalid password format");
         }
-        patientRepository.updatePatientPassword(newPassword, email);
-        return patient;
+        patient.setPassword(newPassword.getPassword());
+        return patientRepository.save(patient);
     }
 
     private boolean isValidPassword(String password) {
@@ -91,11 +92,22 @@ public class PatientService {
     }
 
     private void checkIsEmailAvailable(Patient patient, String email) {
-        if (!patient.getEmail().equals(email) && patientRepository.getPatientByEmail(patient.getEmail()).isPresent()) {
+        if (!patient.getEmail().equals(email) && patientRepository.findById(patient.getEmail()).isPresent()) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Patient with given email already exists");
         }
     }
+
+    public void updatePatientData(Patient toEditPatient, Patient newPatientData) {
+        toEditPatient.setPassword(newPatientData.getPassword());
+        toEditPatient.setBirthday(newPatientData.getBirthday());
+        toEditPatient.setEmail(newPatientData.getEmail());
+        toEditPatient.setFirstName(newPatientData.getFirstName());
+        toEditPatient.setLastName(newPatientData.getLastName());
+        toEditPatient.setIdCardNo(newPatientData.getIdCardNo());
+        toEditPatient.setPhoneNumber(newPatientData.getPhoneNumber());
+    }
 }
+
 
 
 
