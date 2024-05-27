@@ -5,7 +5,6 @@ import com.alexlasota.medicalclinic.model.*;
 import com.alexlasota.medicalclinic.service.VisitService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
