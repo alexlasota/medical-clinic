@@ -22,20 +22,28 @@ public class VisitService {
     private final VisitRepository visitRepository;
     private final VisitMapper visitMapper;
 
-    public Visit createVisit(Long doctorId, LocalDateTime visitStartDate, LocalDateTime visitEndDate) {
-        Doctor doctor = doctorRepository.findById(doctorId)
+    public SimpleVisitDto createVisit(VisitRequestDto visitRequestDto) {
+        validateQuarterHour(visitRequestDto.getVisitStartDate());
+        validateQuarterHour(visitRequestDto.getVisitEndDate());
+
+        Doctor doctor = doctorRepository.findById(visitRequestDto.getDoctorId())
                 .orElseThrow(() -> new MedicalClinicException(HttpStatus.BAD_REQUEST, "Doctor not found"));
 
-        if (visitStartDate.isBefore(visitEndDate)) {
+        if (!visitRepository.findAllOverlapping(visitRequestDto.getDoctorId(), visitRequestDto.getVisitStartDate(), visitRequestDto.getVisitEndDate()).isEmpty()) {
+            throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Cannot create visit. Visits are overlapping!");
+        }
+
+        if (visitRequestDto.getVisitStartDate().isAfter(visitRequestDto.getVisitEndDate())) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Visit start date cannot be after end date");
         }
 
         Visit visit = new Visit();
         visit.setDoctor(doctor);
-        visit.setVisitStartDate(visitStartDate);
-        visit.setVisitEndDate(visitEndDate);
+        visit.setVisitStartDate(visitRequestDto.getVisitStartDate());
+        visit.setVisitEndDate(visitRequestDto.getVisitEndDate());
 
-        return visitRepository.save(visit);
+        Visit savedVisit = visitRepository.save(visit);
+        return visitMapper.visitToSimpleVisit(savedVisit);
     }
 
     public List<Visit> getVisits() {
@@ -54,5 +62,11 @@ public class VisitService {
 
         visitRepository.save(visit);
         return visitMapper.visitToVisitDto(visit);
+    }
+    private void validateQuarterHour(LocalDateTime dateTime) {
+        int minute = dateTime.getMinute();
+        if (minute % 15 != 0) {
+            throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Visit time must be on a quarter-hour mark (e.g., 14:00, 14:15, 14:30, etc.)");
+        }
     }
 }

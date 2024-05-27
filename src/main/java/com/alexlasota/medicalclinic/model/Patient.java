@@ -2,7 +2,11 @@ package com.alexlasota.medicalclinic.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,4 +25,6 @@ public class Patient {
     private String phoneNumber;
     private String birthday;
 
+    @OneToMany(mappedBy = "patient")
+    private List<Visit> visits = new ArrayList<>();
 }

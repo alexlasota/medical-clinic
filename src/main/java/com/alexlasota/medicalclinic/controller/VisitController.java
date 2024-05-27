@@ -1,15 +1,12 @@
 package com.alexlasota.medicalclinic.controller;
 
 import com.alexlasota.medicalclinic.mapper.VisitMapper;
-import com.alexlasota.medicalclinic.model.Patient;
-import com.alexlasota.medicalclinic.model.Visit;
-import com.alexlasota.medicalclinic.model.VisitDto;
+import com.alexlasota.medicalclinic.model.*;
 import com.alexlasota.medicalclinic.service.VisitService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/visit")
@@ -20,19 +17,20 @@ public class VisitController {
     private final VisitMapper visitMapper;
 
     @PostMapping("/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public VisitDto createVisit(@RequestParam Long doctorId,
-                                @RequestParam LocalDateTime visitStartDate,
-                                @RequestParam LocalDateTime visitEndDate) {
-        Visit visit = visitService.createVisit(doctorId, visitStartDate, visitEndDate);
-        return visitMapper.visitToVisitDto(visit);
+    public SimpleVisitDto createVisit(@RequestBody VisitRequestDto visitRequestDto) {
+        return visitService.createVisit(visitRequestDto);
     }
 
+    @GetMapping("/all")
+    public List<SimpleVisitDto> getAllVisits() {
+        List<Visit> visits = visitService.getVisits();
+        return visits.stream()
+                .map(visitMapper::visitToSimpleVisit)
+                .toList();
+    }
 
-
-    //getVisits
-
-    //addVisit
-
-    //assignPatientToVisit
+    @PatchMapping("/{visitId}/{patientId}")
+    public VisitDto assignPatientToVisit(@PathVariable Long visitId, @PathVariable String patientId) {
+        return visitService.assignPatientToVisit(visitId, patientId);
+    }
 }

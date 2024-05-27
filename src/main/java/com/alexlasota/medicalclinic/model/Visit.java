@@ -1,9 +1,6 @@
 package com.alexlasota.medicalclinic.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,12 +14,18 @@ import java.time.LocalDateTime;
 public class Visit {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDateTime visitStartDate;
     private LocalDateTime visitEndDate;
-    private Patient patient;
+
     @ManyToOne
-    @JoinColumn(name = "doctor", referencedColumnName = "docId")
+    @JoinColumn(name = "patient_id", referencedColumnName = "email")
+    private Patient patient;
+
+    @ManyToOne
+    @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     private Doctor doctor;
-    private boolean available;
+
+    private boolean isAvailable;
 }

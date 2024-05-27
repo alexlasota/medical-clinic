@@ -1,14 +1,9 @@
 package com.alexlasota.medicalclinic.controller;
 
-import com.alexlasota.medicalclinic.exceptions.MedicalClinicException;
 import com.alexlasota.medicalclinic.mapper.DoctorMapper;
 import com.alexlasota.medicalclinic.model.Doctor;
 import com.alexlasota.medicalclinic.model.DoctorDto;
-import com.alexlasota.medicalclinic.model.Facility;
-import com.alexlasota.medicalclinic.model.PatientDto;
-import com.alexlasota.medicalclinic.repository.DoctorRepository;
 import com.alexlasota.medicalclinic.service.DoctorService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +22,7 @@ public class DoctorController {
     public List<DoctorDto> getDoctors() {
         return doctorMapper.mapListToDto(doctorService.getDoctors());
     }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Doctor addDoctor(@RequestBody Doctor doctor) {
@@ -39,7 +35,7 @@ public class DoctorController {
     }
 
     @PatchMapping("/{doctorId}/facilities/{facilityId}")
-    public DoctorDto assignDoctorToFacility(@PathVariable Long doctorId, @PathVariable Long facilityId){
+    public DoctorDto assignDoctorToFacility(@PathVariable Long doctorId, @PathVariable Long facilityId) {
         Doctor doctor = doctorService.assignDoctorToFacility(doctorId, facilityId);
         return doctorMapper.doctorToDoctorDto(doctor);
     }

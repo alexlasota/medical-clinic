@@ -17,6 +17,7 @@ import java.util.List;
 public class Doctor {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
     private String password;
@@ -33,11 +34,6 @@ public class Doctor {
     )
     private List<Facility> facilities = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "doctor")
     private List<Visit> visits = new ArrayList<>();
 }
-
-//Model doktora oprócz maila i
-// hasła powinien zawierać imię, nazwisko, specjalizację oraz listę przypisanych placówek.
-//Model placówki powinien zawierać nazwę (powinna być unikalna),
-// miasto, kod pocztowy, ulice oraz numer budynku.
