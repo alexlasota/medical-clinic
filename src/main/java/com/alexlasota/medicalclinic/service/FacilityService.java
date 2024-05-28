@@ -22,7 +22,7 @@ public class FacilityService {
     private final FacilityMapper facilityMapper;
 
     public Facility addFacility(Facility facility) {
-        if (facilityRepository.findById(facility.getId()).isPresent()) {
+        if (facilityRepository.existsById(facility.getId())) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Facility with this ID already exists");
         }
         return facilityRepository.save(facility);

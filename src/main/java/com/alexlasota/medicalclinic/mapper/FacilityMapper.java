@@ -15,12 +15,12 @@ public interface FacilityMapper {
 
     List<FacilityDto> mapListToDto(List<Facility> facilityList);
 
+    SimpleDoctorDto doctorToSimple(Doctor doctor);
+
     @Named("mapDoctorToIds")
     default List<Long> doctorsToIds(List<Doctor> doctors) {
         return doctors.stream()
                 .map(Doctor::getId)
                 .toList();
     }
-
-    SimpleDoctorDto doctorToSimple(Doctor doctor);
 }

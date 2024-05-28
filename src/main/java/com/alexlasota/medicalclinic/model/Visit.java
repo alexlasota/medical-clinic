@@ -26,6 +26,4 @@ public class Visit {
     @ManyToOne
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     private Doctor doctor;
-
-    private boolean isAvailable;
 }

@@ -8,7 +8,6 @@ import org.mapstruct.Mapper;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-
 public interface VisitMapper {
 
     VisitDto visitToVisitDto(Visit visit);

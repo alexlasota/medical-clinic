@@ -30,7 +30,7 @@ public class FacilityController {
     }
 
     @GetMapping("/{id}")
-    public FacilityDto getFacilityById(@PathVariable Long id) {
+    public FacilityDto getFacility(@PathVariable Long id) {
         return facilityMapper.facilityToFacilityDto(facilityService.getFacilityById(id));
     }
 

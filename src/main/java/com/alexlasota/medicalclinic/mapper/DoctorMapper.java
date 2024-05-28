@@ -4,6 +4,7 @@ import com.alexlasota.medicalclinic.model.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -14,12 +15,12 @@ public interface DoctorMapper {
 
     List<DoctorDto> mapListToDto(List<Doctor> doctorList);
 
+    SimpleFacilityDto facilityToSimple(Facility facility);
+
     @Named("mapFacilityToIds")
     default List<Long> facilitiesToIds(List<Facility> facilities) {
         return facilities.stream()
                 .map(Facility::getId)
                 .toList();
     }
-
-    SimpleFacilityDto facilityToSimple(Facility facility);
 }

@@ -107,7 +107,3 @@ public class PatientService {
         toEditPatient.setPhoneNumber(newPatientData.getPhoneNumber());
     }
 }
-
-
-
-

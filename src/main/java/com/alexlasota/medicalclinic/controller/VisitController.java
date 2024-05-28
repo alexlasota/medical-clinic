@@ -8,19 +8,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/visit")
+@RequestMapping("/visits")
 @RequiredArgsConstructor
 public class VisitController {
 
     private final VisitService visitService;
     private final VisitMapper visitMapper;
 
-    @PostMapping("/create")
+    @PostMapping
     public SimpleVisitDto createVisit(@RequestBody VisitRequestDto visitRequestDto) {
         return visitService.createVisit(visitRequestDto);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<SimpleVisitDto> getAllVisits() {
         List<Visit> visits = visitService.getVisits();
         return visits.stream()
@@ -28,7 +28,7 @@ public class VisitController {
                 .toList();
     }
 
-    @PatchMapping("/{visitId}/{patientId}")
+    @PatchMapping("/{visitId}/patients/{patientId}")
     public VisitDto assignPatientToVisit(@PathVariable Long visitId, @PathVariable String patientId) {
         return visitService.assignPatientToVisit(visitId, patientId);
     }

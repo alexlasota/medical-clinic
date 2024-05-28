@@ -56,9 +56,10 @@ public class VisitService {
         Visit visit = visitRepository.findById(visitId)
                 .orElseThrow(() -> new MedicalClinicException(HttpStatus.BAD_REQUEST, "Visit not found"));
 
-        if (visit.getPatient() == null) {
-            visit.setPatient(patient);
-        } else throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Visit not found");
+        if (visit.getPatient() != null) {
+            throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Visit already assigned");
+        }
+        visit.setPatient(patient);
 
         visitRepository.save(visit);
         return visitMapper.visitToVisitDto(visit);

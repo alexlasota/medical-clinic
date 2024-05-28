@@ -9,10 +9,10 @@ import java.util.List;
 @Data
 public class SimpleDoctorDto {
 
-        private Long id;
-        private String firstName;
-        private String phoneNumber;
-        private String specialization;
+    private Long id;
+    private String firstName;
+    private String phoneNumber;
+    private String specialization;
 
-    }
+}
 
