@@ -4,14 +4,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@EqualsAndHashCode
 @ToString
 @Entity
 public class Patient {
@@ -27,4 +26,18 @@ public class Patient {
 
     @OneToMany(mappedBy = "patient")
     private List<Visit> visits = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof Patient other)) return false;
+
+        return Objects.equals(getEmail(), other.getEmail());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
