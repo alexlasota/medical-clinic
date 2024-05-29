@@ -8,6 +8,7 @@ import com.alexlasota.medicalclinic.model.FacilityDto;
 import com.alexlasota.medicalclinic.repository.DoctorRepository;
 import com.alexlasota.medicalclinic.repository.FacilityRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +29,8 @@ public class FacilityService {
         return facilityRepository.save(facility);
     }
 
-    public List<Facility> getFacilities() {
-        return facilityRepository.findAll();
+    public List<Facility> getFacilities(Pageable pageable) {
+        return facilityRepository.findAll(pageable).getContent();
     }
 
     public Facility getFacilityById(Long id) {

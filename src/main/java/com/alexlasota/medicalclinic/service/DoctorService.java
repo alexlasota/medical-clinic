@@ -6,6 +6,7 @@ import com.alexlasota.medicalclinic.model.Facility;
 import com.alexlasota.medicalclinic.repository.DoctorRepository;
 import com.alexlasota.medicalclinic.repository.FacilityRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +20,14 @@ public class DoctorService {
     private final FacilityRepository facilityRepository;
 
     public Doctor addDoctor(Doctor doctor) {
-        if (doctorRepository.findById(doctor.getId()).isPresent()) {
-            throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Doctor with this ID already exists");
-        }
+//        if (doctorRepository.findById(doctor.getId()).isPresent()) {
+//            throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Doctor with this ID already exists");
+//        }
         return doctorRepository.save(doctor);
     }
 
-    public List<Doctor> getDoctors() {
-        return doctorRepository.findAll();
+    public List<Doctor> getDoctors(Pageable pageable) {
+        return doctorRepository.findAll(pageable).getContent();
     }
 
     public Doctor getDoctorById(Long id) {

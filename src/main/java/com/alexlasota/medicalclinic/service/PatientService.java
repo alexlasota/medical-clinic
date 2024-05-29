@@ -5,6 +5,7 @@ import com.alexlasota.medicalclinic.model.Password;
 import com.alexlasota.medicalclinic.model.Patient;
 import com.alexlasota.medicalclinic.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,8 @@ public class PatientService {
 
     private final PatientRepository patientRepository;
 
-    public List<Patient> getPatients() {
-        return patientRepository.findAll();
+    public List<Patient> getPatients(Pageable pageable) {
+        return patientRepository.findAll(pageable).getContent();
     }
 
     public Patient getPatientByEmail(String email) {

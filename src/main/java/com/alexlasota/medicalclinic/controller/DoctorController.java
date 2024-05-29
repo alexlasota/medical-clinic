@@ -5,8 +5,10 @@ import com.alexlasota.medicalclinic.model.Doctor;
 import com.alexlasota.medicalclinic.model.DoctorDto;
 import com.alexlasota.medicalclinic.service.DoctorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -18,8 +20,8 @@ public class DoctorController {
     private final DoctorMapper doctorMapper;
 
     @GetMapping
-    public List<DoctorDto> getDoctors() {
-        return doctorMapper.mapListToDto(doctorService.getDoctors());
+    public List<DoctorDto> getDoctors(Pageable pageable) {
+        return doctorMapper.mapListToDto(doctorService.getDoctors(pageable));
     }
 
     @PostMapping

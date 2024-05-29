@@ -5,6 +5,7 @@ import com.alexlasota.medicalclinic.model.Facility;
 import com.alexlasota.medicalclinic.model.FacilityDto;
 import com.alexlasota.medicalclinic.service.FacilityService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +20,8 @@ public class FacilityController {
     private final FacilityMapper facilityMapper;
 
     @GetMapping
-    public List<FacilityDto> getFacilities() {
-        return facilityMapper.mapListToDto(facilityService.getFacilities());
+    public List<FacilityDto> getFacilities(Pageable pageable) {
+        return facilityMapper.mapListToDto(facilityService.getFacilities(pageable));
     }
 
     @PostMapping

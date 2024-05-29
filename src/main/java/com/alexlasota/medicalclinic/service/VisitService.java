@@ -7,6 +7,7 @@ import com.alexlasota.medicalclinic.repository.DoctorRepository;
 import com.alexlasota.medicalclinic.repository.PatientRepository;
 import com.alexlasota.medicalclinic.repository.VisitRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,10 @@ public class VisitService {
     private final PatientRepository patientRepository;
     private final VisitRepository visitRepository;
     private final VisitMapper visitMapper;
+
+    public List<Visit> getVisits(Pageable pageable) {
+        return visitRepository.findAll(pageable).getContent();
+    }
 
     public SimpleVisitDto createVisit(VisitRequestDto visitRequestDto) {
         validateQuarterHour(visitRequestDto.getVisitStartDate());
@@ -46,10 +51,6 @@ public class VisitService {
         return visitMapper.visitToSimpleVisit(savedVisit);
     }
 
-    public List<Visit> getVisits() {
-        return visitRepository.findAll();
-    }
-
     public VisitDto assignPatientToVisit(Long visitId, String patientId) {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new MedicalClinicException(HttpStatus.BAD_REQUEST, "Patient not found"));
@@ -64,6 +65,7 @@ public class VisitService {
         visitRepository.save(visit);
         return visitMapper.visitToVisitDto(visit);
     }
+
     private void validateQuarterHour(LocalDateTime dateTime) {
         int minute = dateTime.getMinute();
         if (minute % 15 != 0) {

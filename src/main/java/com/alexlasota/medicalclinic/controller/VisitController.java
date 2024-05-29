@@ -3,8 +3,10 @@ package com.alexlasota.medicalclinic.controller;
 import com.alexlasota.medicalclinic.mapper.VisitMapper;
 import com.alexlasota.medicalclinic.model.*;
 import com.alexlasota.medicalclinic.service.VisitService;
+import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -15,18 +17,19 @@ public class VisitController {
     private final VisitService visitService;
     private final VisitMapper visitMapper;
 
+    @GetMapping
+    public List<SimpleVisitDto> getVisits(Pageable pageable) {
+        List<Visit> visitsPage = visitService.getVisits(pageable);
+        return visitsPage.stream()
+                .map(visitMapper::visitToSimpleVisit)
+                .toList();
+    }
+
     @PostMapping
     public SimpleVisitDto createVisit(@RequestBody VisitRequestDto visitRequestDto) {
         return visitService.createVisit(visitRequestDto);
     }
 
-    @GetMapping
-    public List<SimpleVisitDto> getAllVisits() {
-        List<Visit> visits = visitService.getVisits();
-        return visits.stream()
-                .map(visitMapper::visitToSimpleVisit)
-                .toList();
-    }
 
     @PatchMapping("/{visitId}/patients/{patientId}")
     public VisitDto assignPatientToVisit(@PathVariable Long visitId, @PathVariable String patientId) {

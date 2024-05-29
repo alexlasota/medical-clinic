@@ -6,6 +6,7 @@ import com.alexlasota.medicalclinic.model.PatientDto;
 import com.alexlasota.medicalclinic.service.PatientService;
 import com.alexlasota.medicalclinic.model.Patient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +21,8 @@ public class PatientController {
     private final PatientMapper patientMapper;
 
     @GetMapping
-    public List<PatientDto> getPatients() {
-        return patientMapper.mapListToDto(patientService.getPatients());
+    public List<PatientDto> getPatients(Pageable pageable) {
+        return patientMapper.mapListToDto(patientService.getPatients(pageable));
     }
 
     //w sytuacji kiedy w sciezce nasz parametr nazywa sie tak samo jak zmienna
