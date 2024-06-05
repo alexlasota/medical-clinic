@@ -20,9 +20,6 @@ public class DoctorService {
     private final FacilityRepository facilityRepository;
 
     public Doctor addDoctor(Doctor doctor) {
-//        if (doctorRepository.findById(doctor.getId()).isPresent()) {
-//            throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Doctor with this ID already exists");
-//        }
         return doctorRepository.save(doctor);
     }
 

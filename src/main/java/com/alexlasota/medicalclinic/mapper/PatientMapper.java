@@ -12,4 +12,3 @@ public interface PatientMapper {
 
     List<PatientDto> mapListToDto(List<Patient> patientList);
 }
-

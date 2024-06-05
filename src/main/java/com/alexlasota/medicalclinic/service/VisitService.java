@@ -51,7 +51,7 @@ public class VisitService {
         return visitMapper.visitToSimpleVisit(savedVisit);
     }
 
-    public VisitDto assignPatientToVisit(Long visitId, String patientId) {
+    public VisitDto assignPatientToVisit(Long visitId, Long patientId) {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new MedicalClinicException(HttpStatus.BAD_REQUEST, "Patient not found"));
         Visit visit = visitRepository.findById(visitId)

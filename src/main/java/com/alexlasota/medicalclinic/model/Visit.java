@@ -19,7 +19,7 @@ public class Visit {
     private LocalDateTime visitEndDate;
 
     @ManyToOne
-    @JoinColumn(name = "patient_id", referencedColumnName = "email")
+    @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private Patient patient;
 
     @ManyToOne

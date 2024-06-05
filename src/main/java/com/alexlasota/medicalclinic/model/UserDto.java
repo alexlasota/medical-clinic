@@ -5,12 +5,9 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class PatientDto {
+public class UserDto {
 
     private Long id;
-    private String idCardNo;
-    private String phoneNumber;
-    private String birthday;
-    private UserDto userDto;
-
+    private String firstName;
+    private String lastName;
 }

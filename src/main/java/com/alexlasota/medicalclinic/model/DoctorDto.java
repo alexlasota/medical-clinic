@@ -11,10 +11,9 @@ public class DoctorDto {
 
     private Long id;
     private String email;
-    private String firstName;
-    private String lastName;
     private String phoneNumber;
     private String specialization;
     private List<Long> facilityIds;
+    private UserDto userDto;
 
 }

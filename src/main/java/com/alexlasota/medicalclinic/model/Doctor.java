@@ -18,12 +18,12 @@ public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String email;
-    private String password;
-    private String firstName;
-    private String lastName;
     private String phoneNumber;
     private String specialization;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private MedicalUser medicalUser;
 
     @ManyToMany
     @JoinTable(
