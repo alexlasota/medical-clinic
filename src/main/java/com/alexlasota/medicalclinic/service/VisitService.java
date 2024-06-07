@@ -29,11 +29,12 @@ public class VisitService {
         return visitRepository.findAll(pageable).getContent();
     }
 
-    //TC1: W przypadku gdy istnieje doctor o danym id, wizyty nie nachodzą na siebie oraz data start nie jest po dacie end
+    //TC1: W przypadku gdy metoda validateQuarterHour zwraca prawidlowe dane, istnieje doctor o danym id, wizyty nie nachodzą na siebie oraz data start nie jest po dacie end
     //przydzielamy doctora do wizyty, ustawiamy date startu oraz endu wizyty oraz wywolujemy metode save z visitRepo gdzie zapisujemy wizyte
-    //TC2: W przypadku gdy nie istnieje doktor o danym id powinien poleciec wyjatek
-    //TC3: W przypadku gdy istnieje doktor o danym id ale wizyty pokrywają się godzinami to powinien poleciec wyjatek
-    //TC4: W przypadku gdy istnieje doktor o danym id, wizyty nie pokrywają się godzinami
+    //TC2: W przypadku gdy metoda validateQuarterHour nie zwraca prawidlowych danych poleci wyjatek
+    //TC2: W przypadku gdy metoda validateQuarterHour zwraca prawidlowe dane, nie istnieje doktor o danym id powinien poleciec wyjatek
+    //TC3: W przypadku gdy metoda validateQuarterHour zwraca prawidlowe dane, istnieje doktor o danym id ale wizyty pokrywają się godzinami to powinien poleciec wyjatek
+    //TC4: W przypadku gdy metoda validateQuarterHour zwraca prawidlowe dane, istnieje doktor o danym id, wizyty nie pokrywają się godzinami
 
     @Transactional
     public SimpleVisitDto createVisit(VisitRequestDto visitRequestDto) {

@@ -24,10 +24,10 @@ public class PatientService {
         return patientRepository.findAll(pageable).getContent();
     }
 
-    // TC1: W przypadku gdy istnieje pacjent o danym emailu oraz metoda checkIfDataIsNotNull zwraca prawidłowe dane
+    // TC1: W przypadku gdy nie istnieje pacjent o danym emailu oraz metoda checkIfDataIsNotNull zwraca prawidłowe dane
     // wykona sie metoda save z patientRepo i pacjent zostanie zapisany
-    // TC2: W przypadku gdy nie istnieje pacjent o danym emailu to poleci wyjątek
-    // TC3: W przypadku gdy istniej pacjent o danym mailu ale metoda checkIfDataIsNotNull
+    // TC2: W przypadku gdy istnieje pacjent o danym emailu to poleci wyjątek
+    // TC3: W przypadku gdy nie istniej pacjent o danym mailu ale metoda checkIfDataIsNotNull
     // otrzyma niekompletne informacje poleci wyjatek
     @Transactional
     public void addPatient(Patient patient) {
@@ -46,7 +46,10 @@ public class PatientService {
     // TC1: W przypadku gdy istnieje pacjent o danym mailu, metoda checkIfDataIsnotNull/checkIsEmailAvailable zwraca prawidlowe dane
     // pacjent nie zmieni getIdCard zostanie zaktualizaowane info pacjenta oraz zostanie wywolana metoda save z patientRepo
     // TC 2: W przypadku gdy nie istnieje pacjent o danym mailu powinien poleciec wyjatek
-    // TC 3:
+    // TC 3: W przypadku gdy istnieje pacjent o danym mailu ale metoda checkIfDataIsNotNull zwraca nieprawidlowe dane poleci wyjatek
+    // TC 4: W przypadku gdy istnieje pacjent o danym mailu ale metoda checkIsEmailAvaikabke zwraca nieprawidlowe dane poleci wyjatek
+    // TC 5: W przypadku gdy istnieje pacjent o danym mailu, metoda checkIfDataIsnotNull/checkIsEmailAvailable zwraca prawidlowe dane
+    // ale pacjent chce zmienic IdCardNo poleci wyjatek
     @Transactional
     public Patient editPatient(String email, Patient newPatientData) {
         Patient toEditPatient = patientRepository.findByMedicalUser_email(email)
