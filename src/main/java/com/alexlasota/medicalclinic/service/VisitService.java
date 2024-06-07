@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,10 +24,18 @@ public class VisitService {
     private final VisitRepository visitRepository;
     private final VisitMapper visitMapper;
 
+    // TC1: W przypadku gdy zostanie wywolana metoda z visitRepo findAll to zostanie zwrocona lista wizyt.
     public List<Visit> getVisits(Pageable pageable) {
         return visitRepository.findAll(pageable).getContent();
     }
 
+    //TC1: W przypadku gdy istnieje doctor o danym id, wizyty nie nachodzą na siebie oraz data start nie jest po dacie end
+    //przydzielamy doctora do wizyty, ustawiamy date startu oraz endu wizyty oraz wywolujemy metode save z visitRepo gdzie zapisujemy wizyte
+    //TC2: W przypadku gdy nie istnieje doktor o danym id powinien poleciec wyjatek
+    //TC3: W przypadku gdy istnieje doktor o danym id ale wizyty pokrywają się godzinami to powinien poleciec wyjatek
+    //TC4: W przypadku gdy istnieje doktor o danym id, wizyty nie pokrywają się godzinami
+
+    @Transactional
     public SimpleVisitDto createVisit(VisitRequestDto visitRequestDto) {
         validateQuarterHour(visitRequestDto.getVisitStartDate());
         validateQuarterHour(visitRequestDto.getVisitEndDate());
@@ -51,6 +60,12 @@ public class VisitService {
         return visitMapper.visitToSimpleVisit(savedVisit);
     }
 
+    //TC1: W przypadku gdy istnieje patient o danym id i wizyta o danym id oraz wizyta nie ma jeszcze przypisanego pacjenta
+    //przydzielamy do wizyty pacjenta, wywolujemy metode save z visitRepo ktora zapisuje pacjenta
+    //TC2: W przypadku gdy nie istnieje pacjent o danym id powinien poleciec wyjatek
+    //TC3: W przypadku gdzy istnieje pacjent o danym id ale nie istnieje wizyta o danym id powinien poleciec wyjatek
+    //TC4: W przypadku gdy istnieje pacjent o danym id oraz wizyta o danym id ale wizyta ma juz przypisanego pacjenta powinien poleciec wyjatek
+    @Transactional
     public VisitDto assignPatientToVisit(Long visitId, Long patientId) {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new MedicalClinicException(HttpStatus.BAD_REQUEST, "Patient not found"));

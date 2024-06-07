@@ -1,7 +1,6 @@
 package com.alexlasota.medicalclinic.service;
 
 import com.alexlasota.medicalclinic.exceptions.MedicalClinicException;
-import com.alexlasota.medicalclinic.model.MedicalUser;
 import com.alexlasota.medicalclinic.model.Patient;
 import com.alexlasota.medicalclinic.repository.PatientRepository;
 import com.alexlasota.medicalclinic.repository.UserRepository;
@@ -9,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,15 +19,17 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final UserRepository userRepository;
 
+    //TC1: W przypadku gdy zostanie wywoalana metoda findAll z patientRepo to zostanie zwrocona lista pacjentow
     public List<Patient> getPatients(Pageable pageable) {
         return patientRepository.findAll(pageable).getContent();
     }
 
-    public MedicalUser getPatientByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new MedicalClinicException(HttpStatus.NOT_FOUND, "Patient with given email doesnt exist"));
-    }
-
+    // TC1: W przypadku gdy istnieje pacjent o danym emailu oraz metoda checkIfDataIsNotNull zwraca prawidłowe dane
+    // wykona sie metoda save z patientRepo i pacjent zostanie zapisany
+    // TC2: W przypadku gdy nie istnieje pacjent o danym emailu to poleci wyjątek
+    // TC3: W przypadku gdy istniej pacjent o danym mailu ale metoda checkIfDataIsNotNull
+    // otrzyma niekompletne informacje poleci wyjatek
+    @Transactional
     public void addPatient(Patient patient) {
         if (userRepository.findByEmail(patient.getMedicalUser().getEmail()).isPresent()) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "User with this email already exists");
@@ -36,10 +38,13 @@ public class PatientService {
         patientRepository.save(patient);
     }
 
+    //TC1: W przypadku gdy wykona sie metoda deleteByMail z userRepo zostanie usuniety user o danym mailu
     public void removeUserByEmail(String email) {
         userRepository.deleteByEmail(email);
     }
 
+    // TC1: W przypadku gdy istnieje pacjent o danym mailu
+    @Transactional
     public Patient editPatient(String email, Patient newPatientData) {
         Patient toEditPatient = patientRepository.findByMedicalUser_email(email)
                 .orElseThrow(() -> new MedicalClinicException(HttpStatus.NOT_FOUND, "Patient with given email doesnt exist"));
@@ -78,14 +83,14 @@ public class PatientService {
         }
     }
 
-    private boolean checkIsEmailAvailable(Patient patient, String email) {
+    private boolean checkIsEmailAvailable(Patient newPatientData, String email) {
         if (patientRepository.findByMedicalUser_email(email).isPresent()) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Patient with given email already exists");
         }
         return false;
     }
 
-    public void updatePatientData(Patient toEditPatient, Patient newPatientData) {
+    private void updatePatientData(Patient toEditPatient, Patient newPatientData) {
         toEditPatient.getMedicalUser().setPassword(newPatientData.getMedicalUser().getPassword());
         toEditPatient.setBirthday(newPatientData.getBirthday());
         toEditPatient.getMedicalUser().setEmail(newPatientData.getMedicalUser().getEmail());

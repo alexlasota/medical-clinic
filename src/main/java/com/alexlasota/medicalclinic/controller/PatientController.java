@@ -25,6 +25,7 @@ public class PatientController {
         return patientMapper.mapListToDto(patientService.getPatients(pageable));
     }
 
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Patient addPatient(@RequestBody Patient patient) {
