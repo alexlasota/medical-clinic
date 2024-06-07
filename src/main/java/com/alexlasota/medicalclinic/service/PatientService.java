@@ -43,7 +43,10 @@ public class PatientService {
         userRepository.deleteByEmail(email);
     }
 
-    // TC1: W przypadku gdy istnieje pacjent o danym mailu
+    // TC1: W przypadku gdy istnieje pacjent o danym mailu, metoda checkIfDataIsnotNull/checkIsEmailAvailable zwraca prawidlowe dane
+    // pacjent nie zmieni getIdCard zostanie zaktualizaowane info pacjenta oraz zostanie wywolana metoda save z patientRepo
+    // TC 2: W przypadku gdy nie istnieje pacjent o danym mailu powinien poleciec wyjatek
+    // TC 3:
     @Transactional
     public Patient editPatient(String email, Patient newPatientData) {
         Patient toEditPatient = patientRepository.findByMedicalUser_email(email)
