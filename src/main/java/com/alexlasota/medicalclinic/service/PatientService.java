@@ -19,7 +19,7 @@ public class PatientService {
     private final PatientRepository patientRepository;
     private final UserRepository userRepository;
 
-    //TC1: W przypadku gdy zostanie wywoalana metoda findAll z patientRepo to zostanie zwrocona lista pacjentow
+    //TC1: W przypadku gdy zostanie wywolana metoda findAll z patientRepo to zostanie zwrocona lista pacjentow
     public List<Patient> getPatients(Pageable pageable) {
         return patientRepository.findAll(pageable).getContent();
     }
