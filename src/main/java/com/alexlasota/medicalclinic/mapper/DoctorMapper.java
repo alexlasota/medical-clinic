@@ -13,6 +13,8 @@ public interface DoctorMapper {
     @Mapping(source = "facilities", target = "facilityIds", qualifiedByName = "mapFacilityToIds")
     DoctorDto doctorToDoctorDto(Doctor doctor);
 
+    SimpleDoctorDto doctorToSimpleDoctorDto(Doctor doctor);
+
     List<DoctorDto> mapListToDto(List<Doctor> doctorList);
 
     SimpleFacilityDto facilityToSimple(Facility facility);

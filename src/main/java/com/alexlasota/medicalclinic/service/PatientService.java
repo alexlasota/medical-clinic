@@ -56,7 +56,7 @@ public class PatientService {
                 .orElseThrow(() -> new MedicalClinicException(HttpStatus.NOT_FOUND, "Patient with given email doesnt exist"));
 
         checkIfDataIsNotNull(newPatientData);
-        checkIsEmailAvailable(newPatientData, newPatientData.getMedicalUser().getEmail());
+        checkIsEmailAvailable(toEditPatient, newPatientData.getMedicalUser().getEmail());
 
         if (!toEditPatient.getIdCardNo().equals(newPatientData.getIdCardNo())) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Changing idNumber isnt allowed byczku");
@@ -89,11 +89,15 @@ public class PatientService {
         }
     }
 
-    private boolean checkIsEmailAvailable(Patient newPatientData, String email) {
+    private boolean checkIsEmailAvailable(Patient currentPatient, String email) {
+        if (currentPatient != null && currentPatient.getMedicalUser() != null
+                && email.equals(currentPatient.getMedicalUser().getEmail())) {
+            return true;
+        }
         if (patientRepository.findByMedicalUser_email(email).isPresent()) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Patient with given email already exists");
         }
-        return false;
+        return true;
     }
 
     private void updatePatientData(Patient toEditPatient, Patient newPatientData) {
