@@ -1,5 +1,6 @@
 package com.alexlasota.medicalclinic.service;
 
+import com.alexlasota.medicalclinic.exceptions.MedicalClinicException;
 import com.alexlasota.medicalclinic.model.MedicalUser;
 import com.alexlasota.medicalclinic.model.Patient;
 import com.alexlasota.medicalclinic.repository.PatientRepository;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +71,30 @@ public class PatientServiceTest {
     }
 
     @Test
+    void addPatients_PatientWithEmailExists_ExceptionThrown() {
+        Patient patient = createPatient("al@gmail.com", 1L);
+        when(userRepository.findByEmail(patient.getMedicalUser().getEmail())).thenReturn(Optional.of(patient.getMedicalUser()));
+
+        MedicalClinicException exception = Assertions.assertThrows(MedicalClinicException.class,
+                () -> patientService.addPatient(patient));
+
+        Assertions.assertEquals("User with this email already exists", exception.getMessage());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    @Test
+    void addPatients_PatientDoesntExist_DataIncorrect_ExceptionThrown() {
+        Patient patient = createPatient(null, 1L);
+        when(userRepository.findByEmail(patient.getMedicalUser().getEmail())).thenReturn(Optional.empty());
+
+        MedicalClinicException exception = Assertions.assertThrows(MedicalClinicException.class,
+                () -> patientService.addPatient(patient));
+
+        Assertions.assertEquals("Email is required", exception.getMessage());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    @Test
     void removeUserByEmail_PatientWithEmailExists_PatientRemoved() {
         //given
         String email = "alex";
@@ -89,6 +115,64 @@ public class PatientServiceTest {
         patientService.editPatient(email, newPatient);
         //then
         Assertions.assertEquals(email, newPatient.getMedicalUser().getEmail());
+    }
+
+    @Test
+    void editPatient_PatientDoesntExist_ExceptionThrown(){
+        String email = "alex";
+        Patient newPatient = createPatient("alex", 1L);
+        when(patientRepository.findByMedicalUser_email(email)).thenReturn(Optional.empty());
+
+        MedicalClinicException exception = Assertions.assertThrows(MedicalClinicException.class,
+                () -> patientService.editPatient(email,newPatient));
+
+        Assertions.assertEquals("Patient with given email doesnt exist", exception.getMessage());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getHttpStatus());
+    }
+
+    @Test
+    void editPatient_PatientExists_CheckIfDataIsNotNullIncorrect_ExceptionThrown(){
+        String email = "alex";
+        Patient newPatient = createPatient(null, 1L);
+        when(patientRepository.findByMedicalUser_email(email)).thenReturn(Optional.of(newPatient));
+
+        MedicalClinicException exception = Assertions.assertThrows(MedicalClinicException.class,
+                () -> patientService.editPatient(email,newPatient));
+
+        Assertions.assertEquals("Email is required", exception.getMessage());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    @Test
+    void editPatient_PatientExists_CheckIsEmailAvailableIncorrect_ExceptionThrown(){
+        String email = "alex";
+        Patient newPatient = createPatient("alex", 1L);
+        Patient newPatient2 = createPatient("alex", 2L);
+        when(patientRepository.findByMedicalUser_email(email)).thenReturn(Optional.of(newPatient));
+        when(patientRepository.findByMedicalUser_email(newPatient2.getMedicalUser().getEmail())).thenReturn(Optional.of(newPatient2));
+
+        MedicalClinicException exception = Assertions.assertThrows(MedicalClinicException.class,
+                () -> patientService.editPatient(email,newPatient));
+
+        Assertions.assertEquals("Patient with given email already exists", exception.getMessage());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    @Test
+    void editPatient_ChangingIdCardNoNotAllowed_ExceptionThrown() {
+        String email = "alex@example.com";
+        Patient newPatient = createPatient(email, 1L);
+        newPatient.setIdCardNo("ABC123");
+        Patient newPatientData = createPatient(email, 1L);
+        newPatientData.setIdCardNo("NEW456");
+
+        when(patientRepository.findByMedicalUser_email(email)).thenReturn(Optional.of(newPatient));
+
+        MedicalClinicException exception = Assertions.assertThrows(MedicalClinicException.class,
+                () -> patientService.editPatient(email, newPatientData));
+
+        Assertions.assertEquals("Changing idNumber isnt allowed byczku", exception.getMessage());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
     }
 
 

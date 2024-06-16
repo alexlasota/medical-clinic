@@ -1,5 +1,6 @@
 package com.alexlasota.medicalclinic.service;
 
+import com.alexlasota.medicalclinic.exceptions.MedicalClinicException;
 import com.alexlasota.medicalclinic.mapper.VisitMapper;
 import com.alexlasota.medicalclinic.model.*;
 import com.alexlasota.medicalclinic.repository.DoctorRepository;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -84,6 +86,55 @@ public class VisitServiceTest {
     }
 
     @Test
+    void createVisit_InvalidQuarterData_ExceptionThrown() {
+        // given
+        VisitRequestDto requestDto = new VisitRequestDto();
+        requestDto.setDoctorId(1L);
+        requestDto.setVisitStartDate(LocalDateTime.of(2025, 1, 1, 10, 12));
+        requestDto.setVisitEndDate(LocalDateTime.of(2025, 1, 3, 12, 11));
+        // when
+        MedicalClinicException exception = Assertions.assertThrows(MedicalClinicException.class,
+                () -> visitService.createVisit(requestDto));
+        // then
+        Assertions.assertEquals("Visit time must be on a quarter-hour mark (e.g., 14:00, 14:15, 14:30, etc.)", exception.getMessage());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    @Test
+    void createVisit_QuarterValidationCorrect_DoctorDoesntExist_ExceptionThrown() {
+        Doctor doctor = new Doctor();
+        doctor.setId(1L);
+        VisitRequestDto requestDto = new VisitRequestDto();
+        requestDto.setDoctorId(1L);
+        requestDto.setVisitStartDate(LocalDateTime.of(2025, 1, 1, 10, 15));
+        requestDto.setVisitEndDate(LocalDateTime.of(2025, 1, 3, 12, 15));
+        when(doctorRepository.findById(doctor.getId())).thenReturn(Optional.empty());
+        MedicalClinicException exception = Assertions.assertThrows(MedicalClinicException.class,
+                () -> visitService.createVisit(requestDto));
+        Assertions.assertEquals("Doctor not found", exception.getMessage());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    @Test
+    void createVisit_QuarterValidationCorrect_DoctorExist_TimesAreOverlapping_ExceptionThrown() {
+        Doctor doctor = new Doctor();
+        doctor.setId(1L);
+        VisitRequestDto requestDto = new VisitRequestDto();
+        requestDto.setDoctorId(1L);
+        requestDto.setVisitStartDate(LocalDateTime.of(2025, 1, 1, 10, 15));
+        requestDto.setVisitEndDate(LocalDateTime.of(2025, 1, 3, 12, 15));
+        when(doctorRepository.findById(doctor.getId())).thenReturn(Optional.of(doctor));
+        when(visitRepository.findAllOverlapping(doctor.getId(), requestDto.getVisitStartDate(), requestDto.getVisitEndDate())).thenReturn(List.of(new Visit()));
+
+
+        MedicalClinicException exception = Assertions.assertThrows(MedicalClinicException.class,
+                () -> visitService.createVisit(requestDto));
+
+        Assertions.assertEquals("Cannot create visit. Visits are overlapping!", exception.getMessage());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    @Test
     void assignPatientToVisit_PatientAndVisitExist_PatientAndVisitSaved() {
         //given
         Long visitId = 1L;
@@ -101,6 +152,65 @@ public class VisitServiceTest {
         //then
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1L, visit.getPatient().getId());
+    }
+
+    @Test
+    void assignPatientToVisit_PacientDoesntExist_ExceptionThrown(){
+        Long visitId = 1L;
+        Long patientId = 1L;
+        Patient patient = new Patient();
+        patient.setId(patientId);
+        Visit visit = new Visit();
+        visit.setId(visitId);
+
+        when(patientRepository.findById(patientId)).thenReturn(Optional.empty());
+
+        MedicalClinicException exception = Assertions.assertThrows(MedicalClinicException.class,
+                () -> visitService.assignPatientToVisit(visitId,patientId));
+
+        Assertions.assertEquals("Patient not found", exception.getMessage());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    @Test
+    void assignPatientToVisit_PacientExist_VisitDoesntExist_ExceptionThrown(){
+        Long visitId = 1L;
+        Long patientId = 1L;
+        Patient patient = new Patient();
+        patient.setId(patientId);
+        Visit visit = new Visit();
+        visit.setId(visitId);
+
+        when(patientRepository.findById(patientId)).thenReturn(Optional.of(patient));
+        when(visitRepository.findById(visitId)).thenReturn(Optional.of(visit));
+
+
+        MedicalClinicException exception = Assertions.assertThrows(MedicalClinicException.class,
+                () -> visitService.assignPatientToVisit(visitId,patientId));
+
+        Assertions.assertEquals("Visit not found", exception.getMessage());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
+    }
+
+    @Test
+    void assignPatientToVisit_PacientAndVisitExist_VisitAlreadyHasPatientAssigned_ExceptionThrown(){
+        Long visitId = 1L;
+        Long patientId = 1L;
+        Patient patient = new Patient();
+        patient.setId(patientId);
+        Visit visit = new Visit();
+        visit.setId(visitId);
+        visit.setPatient(patient);
+
+        when(patientRepository.findById(patientId)).thenReturn(Optional.of(patient));
+        when(visitRepository.findById(visitId)).thenReturn(Optional.of(visit));
+
+
+        MedicalClinicException exception = Assertions.assertThrows(MedicalClinicException.class,
+                () -> visitService.assignPatientToVisit(visitId,patientId));
+
+        Assertions.assertEquals("Visit already assigned", exception.getMessage());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
     }
 
 
