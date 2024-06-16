@@ -1,6 +1,5 @@
 package com.alexlasota.medicalclinic.service;
 
-import com.alexlasota.medicalclinic.mapper.DoctorMapper;
 import com.alexlasota.medicalclinic.mapper.VisitMapper;
 import com.alexlasota.medicalclinic.model.*;
 import com.alexlasota.medicalclinic.repository.DoctorRepository;
