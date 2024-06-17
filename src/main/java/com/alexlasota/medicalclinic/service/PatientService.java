@@ -89,15 +89,14 @@ public class PatientService {
         }
     }
 
-    private boolean checkIsEmailAvailable(Patient currentPatient, String email) {
+    private void checkIsEmailAvailable(Patient currentPatient, String email) {
         if (currentPatient != null && currentPatient.getMedicalUser() != null
                 && email.equals(currentPatient.getMedicalUser().getEmail())) {
-            return true;
+            return;
         }
         if (patientRepository.findByMedicalUser_email(email).isPresent()) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Patient with given email already exists");
         }
-        return true;
     }
 
     private void updatePatientData(Patient toEditPatient, Patient newPatientData) {

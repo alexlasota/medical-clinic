@@ -46,7 +46,9 @@ public class VisitServiceTest {
     void getVisits_VisitsExists_VisitsReturned() {
         //given
         List<Visit> visits = new ArrayList<>();
-        visits.add(createVisit());
+        Visit visit = createVisit();
+        visits.add(visit);
+        visit.setId(4L);
         Page<Visit> visitPage = new PageImpl<>(visits);
         Pageable pageable = PageRequest.of(0, 10);
         when(visitRepository.findAll(pageable)).thenReturn(visitPage);
@@ -54,7 +56,7 @@ public class VisitServiceTest {
         List<Visit> result = visitService.getVisits(pageable);
         //then
         Assertions.assertEquals(1, result.size());
-        Assertions.assertEquals(1, result.get(0).getId());
+        Assertions.assertEquals(4L, result.get(0).getId());
     }
 
     @Test
@@ -182,7 +184,7 @@ public class VisitServiceTest {
         visit.setId(visitId);
 
         when(patientRepository.findById(patientId)).thenReturn(Optional.of(patient));
-        when(visitRepository.findById(visitId)).thenReturn(Optional.of(visit));
+        when(visitRepository.findById(visitId)).thenReturn(Optional.empty());
 
 
         MedicalClinicException exception = Assertions.assertThrows(MedicalClinicException.class,

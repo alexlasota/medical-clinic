@@ -51,7 +51,9 @@ public class DoctorServiceTest {
     void getDoctors_DoctorsExist_DoctorsReturned() {
         //given
         List<Doctor> doctorList = new ArrayList<>();
-        doctorList.add(new Doctor());
+        Doctor doc = new Doctor();
+        doctorList.add(doc);
+        doc.setPhoneNumber("123");
         Page<Doctor> doctorPage = new PageImpl<>(doctorList);
         Pageable pageable = PageRequest.of(0, 10);
         when(doctorRepository.findAll(pageable)).thenReturn(doctorPage);
@@ -60,6 +62,7 @@ public class DoctorServiceTest {
         //then
         Assertions.assertFalse(doctors.isEmpty());
         Assertions.assertEquals(1, doctors.size());
+        Assertions.assertEquals("123", doc.getPhoneNumber());
     }
 
     @Test
