@@ -26,7 +26,7 @@ public class FacilityController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Facility createFacility(@RequestBody Facility facility) {
+    public Facility addFacility(@RequestBody Facility facility) {
         return facilityService.addFacility(facility);
     }
 

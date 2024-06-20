@@ -8,6 +8,9 @@ import com.alexlasota.medicalclinic.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -179,6 +183,25 @@ public class PatientServiceTest {
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
     }
 
+    @ParameterizedTest
+    @MethodSource("provideUsersToCheckData")
+    void checkIfDataIsNotNull(Patient patient, String message) {
+        MedicalClinicException medicalClinicException = Assertions
+                .assertThrows(MedicalClinicException.class, () -> patientService.checkIfDataIsNotNull(patient));
+        Assertions.assertEquals(message, medicalClinicException.getMessage());
+    }
+
+    private static Stream<Arguments> provideUsersToCheckData() {
+        return Stream.of(
+                Arguments.of(new Patient(null, null, null, null, new MedicalUser(null, null, null, null, null), null), "Email is required"),
+                Arguments.of(new Patient(null, null, null, null, new MedicalUser(null, "al@gmail.com", null, null, null), null), "Password is required"),
+                Arguments.of(new Patient(null, null, null, null, new MedicalUser(null, "al@gmail.com", "haslo123", null, null), null), "ID card number is required"),
+                Arguments.of(new Patient(null, "132411", null, null, new MedicalUser(null, "al@gmail.com", "haslo123", null, null), null), "First name is required"),
+                Arguments.of(new Patient(null, "132411", null, null, new MedicalUser(null, "al@gmail.com", "haslo123", "Alex", null), null), "Last name is required"),
+                Arguments.of(new Patient(null, "132411", null, null, new MedicalUser(null, "al@gmail.com", "haslo123", "Alex", "Lasota"), null), "Phone number is required"),
+                Arguments.of(new Patient(null, "132411", "12142515", null, new MedicalUser(null, "al@gmail.com", "haslo123", "Alex", "Lasota"), null), "Birthday is required")
+        );
+    }
 
     Patient createPatient(String email, Long id) {
         MedicalUser user = new MedicalUser();

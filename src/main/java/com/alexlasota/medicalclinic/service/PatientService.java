@@ -30,12 +30,13 @@ public class PatientService {
     // TC3: W przypadku gdy nie istniej pacjent o danym mailu ale metoda checkIfDataIsNotNull
     // otrzyma niekompletne informacje poleci wyjatek
     @Transactional
-    public void addPatient(Patient patient) {
+    public Patient addPatient(Patient patient) {
         if (userRepository.findByEmail(patient.getMedicalUser().getEmail()).isPresent()) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "User with this email already exists");
         }
         checkIfDataIsNotNull(patient);
         patientRepository.save(patient);
+        return patient;
     }
 
     //TC1: W przypadku gdy wykona sie metoda deleteByMail z userRepo zostanie usuniety user o danym mailu
@@ -65,7 +66,8 @@ public class PatientService {
         return patientRepository.save(toEditPatient);
     }
 
-    private void checkIfDataIsNotNull(Patient patient) {
+
+    public void checkIfDataIsNotNull(Patient patient) {
         if (patient.getMedicalUser().getEmail() == null) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Email is required");
         }
@@ -99,7 +101,7 @@ public class PatientService {
         }
     }
 
-    private void updatePatientData(Patient toEditPatient, Patient newPatientData) {
+    public void updatePatientData(Patient toEditPatient, Patient newPatientData) {
         toEditPatient.getMedicalUser().setPassword(newPatientData.getMedicalUser().getPassword());
         toEditPatient.setBirthday(newPatientData.getBirthday());
         toEditPatient.getMedicalUser().setEmail(newPatientData.getMedicalUser().getEmail());
