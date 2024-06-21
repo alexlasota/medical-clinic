@@ -95,7 +95,6 @@ public class DoctorControllerTest {
         doctor.setPhoneNumber("123");
         doctor.setFacilities(facilities);
 
-
         when(doctorService.assignDoctorToFacility(doctor.getId(), facility.getId())).thenReturn(doctor);
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/doctors/{doctorId}/facilities/{facilityId}", 3L, 1L)
@@ -103,7 +102,5 @@ public class DoctorControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(3L));
-
-
     }
 }
