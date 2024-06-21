@@ -15,8 +15,9 @@ public class MedicalClinicErrorHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(illegalArgumentException.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> onException() {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> onException(RuntimeException runtimeException) {
+        System.out.println(runtimeException.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unknown Error");
     }
 

@@ -2,17 +2,18 @@ package com.alexlasota.medicalclinic.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Data
-public class PatientDto {
+public class DoctorDto {
 
     private Long id;
-    private String idCardNo;
+    private String email;
     private String phoneNumber;
-    private String birthday;
+    private String specialization;
+    private List<Long> facilityIds;
     private UserDto userDto;
 
 }

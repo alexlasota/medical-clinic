@@ -4,15 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PatientDto {
+public class SimpleVisitDto {
 
-    private Long id;
-    private String idCardNo;
-    private String phoneNumber;
-    private String birthday;
-    private UserDto userDto;
-
+    private LocalDateTime visitStartDate;
+    private LocalDateTime visitEndDate;
+    private SimpleDoctorDto doctor;
 }
