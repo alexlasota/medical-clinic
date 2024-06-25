@@ -10,6 +10,7 @@ databaseChangeLog:
                   name: user_id
                   type: bigint
                   constraints:
+                    foreignKey: true
                     foreignKeyName: fk_patient_user
                     references: medical_user(id)
                     unique: true

@@ -4,7 +4,7 @@ databaseChangeLog:
       author: alehandro
       changes:
         - createTable:
-            tableName: MEDICALUSER
+            tableName: MEDICAL_USER
             columns:
               - column:
                   name: id
@@ -13,7 +13,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
-                    primaryKeyName: medicaluser_id
+                    primaryKeyName: medical_user_id
               - column:
                   name: email
                   type: varchar
