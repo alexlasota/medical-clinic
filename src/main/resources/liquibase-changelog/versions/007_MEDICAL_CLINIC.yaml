@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 7
+      author: alehandro
+      changes:
+        - addColumn:
+            tableName: DOCTOR
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_doctor_user
+                    references: medical_user(id)
+                    unique: true

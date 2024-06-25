@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 8
+      author: alehandro
+      changes:
+        - createTable:
+            tableName: DOCTOR_FACILITY
+            columns:
+              - column:
+                  name: doctor_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_doctor_facility
+                    references: doctor(id)
+              - column:
+                  name: facility_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_facility_doctor
+                    references: facility(id)
+        - addPrimaryKey:
+            tableName: DOCTOR_FACILITY
+            columnNames: doctor_id, facility_id
+            constraintName: pk_doctor_facility

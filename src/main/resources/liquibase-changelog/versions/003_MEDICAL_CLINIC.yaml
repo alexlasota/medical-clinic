@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: alehandro
+      changes:
+        - createTable:
+            tableName: FACILITY
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: facility_id
+              - column:
+                  name: name
+                  type: varchar
+              - column:
+                  name: city
+                  type: varchar
+              - column:
+                  name: postNumber
+                  type: varchar
+              - column:
+                  name: street
+                  type: varchar
+              - column:
+                  name: buildingNumber
+                  type: varchar
