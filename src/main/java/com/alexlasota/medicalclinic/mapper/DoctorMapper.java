@@ -11,13 +11,17 @@ import java.util.List;
 public interface DoctorMapper {
 
     @Mapping(source = "facilities", target = "facilityIds", qualifiedByName = "mapFacilityToIds")
+    @Mapping(source = "medicalUser", target = "userDto")
     DoctorDto doctorToDoctorDto(Doctor doctor);
+
 
     SimpleDoctorDto doctorToSimpleDoctorDto(Doctor doctor);
 
     List<DoctorDto> mapListToDto(List<Doctor> doctorList);
 
     SimpleFacilityDto facilityToSimple(Facility facility);
+
+    UserDto userToUserDto(MedicalUser medicalUser);
 
     @Named("mapFacilityToIds")
     default List<Long> facilitiesToIds(List<Facility> facilities) {

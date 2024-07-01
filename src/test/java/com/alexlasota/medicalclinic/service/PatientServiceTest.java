@@ -102,11 +102,11 @@ public class PatientServiceTest {
     void removeUserByEmail_PatientWithEmailExists_PatientRemoved() {
         //given
         String email = "alex";
-        when(userRepository.deleteByEmail(email)).thenReturn(Optional.of(new MedicalUser()));
+        when(patientRepository.deleteByMedicalUser_email(email)).thenReturn(Optional.of(new Patient()));
         //when
         patientService.removeUserByEmail(email);
         //then
-        verify(userRepository).deleteByEmail(email);
+        verify(patientRepository).deleteByMedicalUser_email(email);
     }
 
     @Test

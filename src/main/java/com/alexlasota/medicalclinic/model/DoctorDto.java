@@ -10,7 +10,6 @@ import java.util.List;
 public class DoctorDto {
 
     private Long id;
-    private String email;
     private String phoneNumber;
     private String specialization;
     private List<Long> facilityIds;

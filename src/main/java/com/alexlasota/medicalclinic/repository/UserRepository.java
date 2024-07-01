@@ -9,5 +9,5 @@ public interface UserRepository extends JpaRepository<MedicalUser, Long> {
 
     Optional<MedicalUser> findByEmail(String email);
 
-    Optional<MedicalUser> deleteByEmail(String email);
+    Optional<MedicalUser> deleteUserByEmail(String email);
 }

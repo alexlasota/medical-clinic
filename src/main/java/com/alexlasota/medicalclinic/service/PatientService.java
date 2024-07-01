@@ -40,8 +40,9 @@ public class PatientService {
     }
 
     //TC1: W przypadku gdy wykona sie metoda deleteByMail z userRepo zostanie usuniety user o danym mailu
+    @Transactional
     public void removeUserByEmail(String email) {
-        userRepository.deleteByEmail(email);
+        patientRepository.deleteByMedicalUser_email(email);
     }
 
     // TC1: W przypadku gdy istnieje pacjent o danym mailu, metoda checkIfDataIsnotNull/checkIsEmailAvailable zwraca prawidlowe dane
