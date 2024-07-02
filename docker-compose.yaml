@@ -2,7 +2,9 @@ version: '3'
 
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
@@ -12,10 +14,16 @@ services:
       - SPRING_DATASOURCE_USERNAME=sa
       - SPRING_DATASOURCE_PASSWORD=123
   db:
-    image: med-test1
+    image: postgres:latest
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_DB=medical-clinic
       - POSTGRES_USER=sa
       - POSTGRES_PASSWORD=123
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  app-data:
+  db-data:
