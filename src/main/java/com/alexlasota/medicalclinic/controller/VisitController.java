@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -72,5 +73,22 @@ public class VisitController {
     @PatchMapping("/{visitId}/patients/{patientId}")
     public VisitDto assignPatientToVisit(@PathVariable Long visitId, @PathVariable Long patientId) {
         return visitService.assignPatientToVisit(visitId, patientId);
+    }
+
+    @GetMapping("/patient/{patientId}")
+    public List<VisitDto> getVisitsByPatientId(@PathVariable Long patientId) {
+        return visitService.getVisitsByPatientId(patientId);
+    }
+    @GetMapping("/doctor/{doctorId}/available")
+    public List<VisitDto> getAvailableVisitsByDoctorId(@PathVariable Long doctorId) {
+        return visitService.getAvailableVisitsByDoctorId(doctorId);
+    }
+
+    @GetMapping("/specialization/{specialization}/date")
+    public List<VisitDto> getAvailableVisitsBySpecializationAndDate(
+            @PathVariable String specialization,
+            @RequestParam LocalDateTime startDate,
+            @RequestParam LocalDateTime endDate) {
+        return visitService.getAvailableVisitsBySpecializationAndDate(specialization, startDate, endDate);
     }
 }

@@ -88,4 +88,15 @@ public class VisitService {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Visit time must be on a quarter-hour mark (e.g., 14:00, 14:15, 14:30, etc.)");
         }
     }
+
+    public List<VisitDto> getVisitsByPatientId(Long patientId) {
+        return visitRepository.findVisitsByPatientId(patientId);
+    }
+    public List<VisitDto> getAvailableVisitsByDoctorId(Long doctorId) {
+        return visitRepository.findAvailableVisitsByDoctorId(doctorId);
+    }
+
+    public List<VisitDto> getAvailableVisitsBySpecializationAndDate(String specialization, LocalDateTime startDate, LocalDateTime endDate) {
+        return visitRepository.findAvailableVisitsBySpecializationAndDate(specialization, startDate, endDate);
+    }
 }
