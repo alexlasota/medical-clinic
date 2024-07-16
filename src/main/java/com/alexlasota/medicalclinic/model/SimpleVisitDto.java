@@ -14,4 +14,5 @@ public class SimpleVisitDto {
     private LocalDateTime visitStartDate;
     private LocalDateTime visitEndDate;
     private SimpleDoctorDto doctor;
+
 }

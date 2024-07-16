@@ -12,8 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -87,5 +89,21 @@ public class VisitService {
         if (minute % 15 != 0) {
             throw new MedicalClinicException(HttpStatus.BAD_REQUEST, "Visit time must be on a quarter-hour mark (e.g., 14:00, 14:15, 14:30, etc.)");
         }
+    }
+
+    public List<VisitDto> getVisitsByPatientId(Long patientId) {
+        List<Visit> visits = visitRepository.findVisitsByPatientId(patientId);
+        return visitMapper.mapListToDto(visits);
+    }
+    public List<VisitDto> getAvailableVisitsByDoctorId(Long doctorId) {
+        List<Visit> availableVisitsByDoctorId = visitRepository.findAvailableVisitsByDoctorId(doctorId);
+        return visitMapper.mapListToDto(availableVisitsByDoctorId);
+    }
+
+    public List<VisitDto> getAvailableVisitsBySpecializationAndDate(String specialization, LocalDate date) {
+        List<Visit> visits = visitRepository.findAvailableVisitsBySpecializationAndDate(specialization, date);
+        return visits.stream()
+                .map(visitMapper::visitToVisitDto)
+                .collect(Collectors.toList());
     }
 }
