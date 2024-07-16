@@ -12,8 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -90,13 +92,18 @@ public class VisitService {
     }
 
     public List<VisitDto> getVisitsByPatientId(Long patientId) {
-        return visitRepository.findVisitsByPatientId(patientId);
+        List<Visit> visits = visitRepository.findVisitsByPatientId(patientId);
+        return visitMapper.mapListToDto(visits);
     }
     public List<VisitDto> getAvailableVisitsByDoctorId(Long doctorId) {
-        return visitRepository.findAvailableVisitsByDoctorId(doctorId);
+        List<Visit> availableVisitsByDoctorId = visitRepository.findAvailableVisitsByDoctorId(doctorId);
+        return visitMapper.mapListToDto(availableVisitsByDoctorId);
     }
 
-    public List<VisitDto> getAvailableVisitsBySpecializationAndDate(String specialization, LocalDateTime startDate, LocalDateTime endDate) {
-        return visitRepository.findAvailableVisitsBySpecializationAndDate(specialization, startDate, endDate);
+    public List<VisitDto> getAvailableVisitsBySpecializationAndDate(String specialization, LocalDate date) {
+        List<Visit> visits = visitRepository.findAvailableVisitsBySpecializationAndDate(specialization, date);
+        return visits.stream()
+                .map(visitMapper::visitToVisitDto)
+                .collect(Collectors.toList());
     }
 }

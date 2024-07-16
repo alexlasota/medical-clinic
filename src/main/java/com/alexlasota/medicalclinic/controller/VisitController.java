@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -87,8 +87,7 @@ public class VisitController {
     @GetMapping("/specialization/{specialization}/date")
     public List<VisitDto> getAvailableVisitsBySpecializationAndDate(
             @PathVariable String specialization,
-            @RequestParam LocalDateTime startDate,
-            @RequestParam LocalDateTime endDate) {
-        return visitService.getAvailableVisitsBySpecializationAndDate(specialization, startDate, endDate);
+            @RequestParam LocalDate date) {
+        return visitService.getAvailableVisitsBySpecializationAndDate(specialization, date);
     }
 }
